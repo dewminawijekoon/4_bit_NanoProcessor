@@ -10,7 +10,7 @@
 
 The lab task was to build a 4bit processor using Xilinx Vivado(VHDL), simulate the process and test the build on a Basys3 board. Our workflow for the project is given below.
 
-1. Brainstorm the idea using given [guide] (Data\Lab 9-10 _ Microprocessor.pdf)
+1. Brainstorm the idea using given [guide.](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Lab%209-10%20_%20Microprocessor.pdf)
 1. Creating the project timeline.
 1. Assigning tasks.
 1. Coding, testing and simulation.
