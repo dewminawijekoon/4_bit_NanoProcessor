@@ -18,19 +18,47 @@ The lab task was to build a 4bit processor using Xilinx Vivado(VHDL), simulate t
 1. Testing on the board.
 1. Brainstorming for implementing extra features.
 
-We were able to build a functional  4bit nanoprocessor with a 12bit 8-instructions rom, and 4bit 8-register rom which can implement ADD(Addition), NEG(Negation), MOVI and JRZ(Jump) commands.Processor runs on internal clock signal and can reset the running program using reset button. Processor outputs to a 7segment display, a 4-LED(Signed Binary) system and outputs Overflow, Zero and comparator flags.
-
-We tried to optimize memory usage(LUT count) and power usage. We have used behavioural implementation whenever possible for better undestanding, while prioritizing memory and power optimization. 
-
-Our goal is to expand the processor to 8bit platform with 8 functions ALU, 32 bit program rom with 16bit instructions. The proposed highlevel design architecture is given later. 
-
-
+## Features
+- 8 4 - bit registers
+- 8 12 - bit instructions
+- 8 instructions can be stored
+- 7 Segment Display Unit
+- 4 bit signed binary LED output
+- Overflow and Zero Flags
+- ALU with ADD, SUB and comparator functions
 
 ## Highlevel Architectural Design
 
 Following is the highlevel design architecture of the 4bit nanoprocessor implementation.
 
 ![Schematic](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Schematic_NanoProcessor_4.jpg)
+
+## Optimization
+- The basic version of nanoprocessor consumes 32 LUTs, 455 FFs, and 0.075W power.
+![Power Consumption of Basic NanoProcessor](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_basic.png)
+
+- The advanced version of nanoprocessor consumes 39 LUTs, 45 FFs, and 0.081W power.
+![Power Consumption of NanoProcessor with more outputs and comparator function](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_Advanced.png)
+
+- Only key difference between basic and advanced designs is the comparator. It involves if conditions and outputs to 3 LEDs. This drastically increased 32 LUT count to 39. 
+ - We noted that including 7 Segment Display inside NanoProcessor.vhd increases no.of outputs related and involves more busses resulting increased LUT count. Therefore, we connected Clock, 7 Segment Display and NanoProcessor in a higher level of hierachy.
+
+## Overcoming Obstracles
+#### 1. Instruction Decoder is not working 
+> Initially, we coded the instruction decoder using if else statements and we couldn't simulate the unit seperately. Because of it, whole system didn't simulate properly. After, we unit tested each untested component and one problem was with instruction decoder. Nested if conditions were poorly written and simulation outputs were undefined. We simplified the whole logic removing if else conditions. After few attempts, unit test was successful.
+
+#### 2.  Logic error in the NEG function
+> NEG statements inputs a register address, negates it and stores in the same address. In our Add/ Sub unit, we input a sub_flag which enables subtraction in the add/ sub unit. Mux_A was linking the given register address and Mux_B was linking '0' to the add/ sub unit. This equals to (output = R_A - 0) which results R_A. But, we need (-R_A). After several highlevel ideas to redesign the whole add/ sub unit, we found an logical answer to the problem. "Commutative law of addition". Swapping the links from Mux_A and Mux_B to add/ sub unit doesn't change the addition(R_A + r_B = R_B + R_A), but changes negation(0 - R_A = -R_A). No change of overall design implemented. This improved the system performance drastically.
+
+#### 3. Undefined Registers(D FlipFlops) -> Undefined NanoProcessor Outputs.
+> After a considerable amount of time, we managed to unit test each element, wire them using signals, and complete the system. TestBench files were created to simulate the nano processor finally. To check the functionality we linked all the registers as output. But, though clock and reset inputs worked, no outpus were visible. The problem was not initializing D FlipFlops in registers. So, We initialized D FlipFlops using reset signal and simulation was successful.
+
+#### 4. FPGA Board refuses to connect.
+> New Microsoft Defender has cool features. But, slows process of amateur developers. Our barrier was Memory Integrity feature. It prevents external devices to read/ write our computer. This resulted in serious errors in Vivado to not to identify board. Few google searches rectified the error.
+
+PS : During the project, we met with many more obstracles. But, most of them were able to debug using error, warning messages given in the log. 
+
+## Future Improvements
 
 ## Assembly programs(with machine code) running in the ROM
 
