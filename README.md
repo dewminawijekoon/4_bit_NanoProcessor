@@ -35,9 +35,11 @@ Following is the highlevel design architecture of the 4bit nanoprocessor impleme
 
 ## Optimization
 - The basic version of nanoprocessor consumes 32 LUTs, 455 FFs, and 0.075W power.
+
 ![Power Consumption of Basic NanoProcessor](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_basic.png)
 
 - The advanced version of nanoprocessor consumes 39 LUTs, 45 FFs, and 0.081W power.
+
 ![Power Consumption of NanoProcessor with more outputs and comparator function](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_Advanced.png)
 
 - Only key difference between basic and advanced designs is the comparator. It involves if conditions and outputs to 3 LEDs. This drastically increased 32 LUT count to 39. 
@@ -1162,5 +1164,755 @@ port map(
 Anode <= "1110";
 LED <= Q7;
 
+end Behavioral;
+```
+
+## Simulation
+
+- NanoProcessor
+
+![NanoProcessor testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_NanoProcessor.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity NanoProcessor_TB is
+--  Port ( );
+end NanoProcessor_TB;
+
+architecture Behavioral of NanoProcessor_TB is
+component NanoProcessor
+    Port ( Clk : in STD_LOGIC;
+           Reset : in STD_LOGIC;
+           Overflow : out STD_LOGIC;
+           Zero : out STD_LOGIC;
+           Q_0 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_1 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_2 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_3 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_4 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_5 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_6 : out STD_LOGIC_VECTOR (3 downto 0);
+           Q_7 : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal Clk : STD_LOGIC := '0';
+signal Reset, Overflow, Zero : STD_LOGIC := '0';
+signal Q_0, Q_1, Q_2, Q_3, Q_4, Q_5, Q_6, Q_7 : STD_LOGIC_VECTOR (3 downto 0);
+
+begin
+UUT : NanoProcessor 
+Port Map(
+    Clk => Clk,
+    Reset => Reset,
+    Overflow => Overflow,
+    Zero => Zero,
+    Q_0 => Q_0,
+    Q_1 => Q_1,
+    Q_2 => Q_2,
+    Q_3 => Q_3,
+    Q_4 => Q_4,
+    Q_5 => Q_5,
+    Q_6 => Q_6,
+    Q_7 => Q_7
+    );
+
+    process 
+    begin
+        wait for 5ns;
+        Clk <= NOT(Clk);
+    end process;
+    
+    process
+    begin
+    Reset <= '1';
+    wait for 20ns;
+        
+    Reset <= '0';
+    wait;
+    end process;
+
+end Behavioral;
+
+```
+
+- Program Counter
+
+![Program Counter testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_PC_3.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity PC_3_TB is
+--  Port ( );
+end PC_3_TB;
+
+architecture Behavioral of PC_3_TB is
+
+component PC_3
+    Port(Clk : in STD_LOGIC;
+         PC_In : in STD_LOGIC_VECTOR (2 downto 0);
+         Reset : in STD_LOGIC;
+         PC_Out : out STD_LOGIC_VECTOR (2 downto 0)); 
+end component;
+
+signal Clk : STD_LOGIC := '0';
+signal Reset : STD_LOGIC;
+signal PC_In, PC_Out : STD_LOGIC_VECTOR(2 downto 0);
+
+begin
+UUT : PC_3 
+port map(
+    Clk => Clk,
+    PC_In => PC_In,
+    Reset => Reset, 
+    PC_Out => PC_Out 
+    );
+
+process 
+    begin
+        wait for 20ns;
+        Clk <= NOT(Clk);
+end process;
+    
+process 
+    begin
+        -- Index number : 220734 = 110 101 111 111 111 110
+    Reset <= '1';
+    wait for 100ns;
+    
+    Reset <='0';
+    PC_in <= "110";
+    wait for 200ns;
+    
+    PC_in <= "101";
+    wait for 200ns;
+    
+    PC_in <= "111";
+    wait for 200ns;
+    
+    Reset <= '1';
+    PC_in <= "110";
+    wait;
+   
+end process;
+
+end Behavioral;
+```
+
+- Program Rom
+
+![Program Rom testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Program_Rom.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Program_Rom_TB is
+--  Port ( );
+end Program_Rom_TB;
+
+architecture Behavioral of Program_Rom_TB is
+component LUT_12_8
+    Port ( D : in STD_LOGIC_VECTOR (2 downto 0);
+           I : out STD_LOGIC_VECTOR (11 downto 0));
+end component;
+
+signal d : std_logic_vector (2 downto 0);
+signal i : std_logic_vector (11 downto 0);
+
+begin
+
+UUT : LUT_12_8
+    port map (
+        D => d,
+        I => i);
+        
+ process
+ begin
+    
+    -- 220131 (110101101111100011), 220185 (110101110000011001) 
+    -- 220708 (110101111000100100), 220734 (110101111000111110)
+    wait for 100ns;
+    d <= "110";
+    
+    wait for 100ns;
+    d <= "011";
+    
+    wait for 100ns;
+    d <= "110";    
+    
+    wait for 100ns;
+    d <= "111";
+    
+    wait for 100ns;
+    d <= "100";
+    
+    wait for 100ns;
+    d <= "011";
+    
+    wait for 100ns;
+    d <= "001";
+    
+    wait for 100ns;
+    d <= "010";
+    
+    wait;
+ end process;
+
+end Behavioral;
+```
+
+- Instruction Decoder
+
+![Instruction Decoder testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Instruction_Decoder.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Instruction_Decoder_12_TB is
+--  Port ( );
+end Instruction_Decoder_12_TB;
+
+architecture Behavioral of Instruction_Decoder_12_TB is
+component Instruction_Decoder_12
+Port( I : in STD_LOGIC_VECTOR (11 downto 0);
+           R_jmp_Checker : in STD_LOGIC_VECTOR (3 downto 0);
+           R_Enabler : out STD_LOGIC_VECTOR (2 downto 0);
+           R_A_Selector : out STD_LOGIC_VECTOR (2 downto 0);
+           R_B_Selector : out STD_LOGIC_VECTOR (2 downto 0);
+           Load_Selector : out STD_LOGIC;
+           Add_Sub_Selector : out STD_LOGIC;
+           Jmp_Flag : out STD_LOGIC;
+           Jmp_Address : out STD_LOGIC_VECTOR (2 downto 0);
+           R_Bank_Enabler : out STD_LOGIC;
+           Imd_Val : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal I : STD_LOGIC_VECTOR(11 downto 0);
+signal R_Jmp_Checker, Imd_Val : STD_LOGIC_VECTOR(3 downto 0);
+signal R_Enabler, R_A_Selector, R_B_Selector, Jmp_Address : STD_LOGIC_VECTOR(2 downto 0);
+signal Load_Selector, Add_Sub_Selector, Jmp_Flag, R_Bank_Enabler: STD_LOGIC;
+
+begin
+UUT : Instruction_Decoder_12
+PORT MAP(
+    I => I,
+    R_Jmp_Checker => R_Jmp_Checker,
+    Imd_Val => Imd_Val,
+    R_Enabler => R_Enabler,
+    R_A_Selector => R_A_Selector,
+    R_B_Selector => R_B_Selector,
+    jmp_Address => Jmp_Address,
+    Load_Selector => Load_Selector,
+    Add_Sub_Selector => Add_Sub_Selector,
+    Jmp_Flag => Jmp_Flag,
+    R_Bank_Enabler => R_Bank_Enabler
+    );
+    
+process
+ 
+begin 
+    R_Jmp_Checker <= "0000";
+    I <= "100100000001"; -- 1 -- MOVI R2, 1
+    wait for 100ns;
+    
+    R_Jmp_Checker <= "0111";
+    I <= "010100000000"; -- 2 -- NEG R2
+    wait for 100ns;
+        
+    R_Jmp_Checker <= "0111";
+    I <= "001110010000"; -- 3 -- ADD R7, R1
+    wait for 100ns;
+    
+    R_Jmp_Checker <= "0000";
+    I <= "110000000000"; -- 4 -- JZR R0, 3
+    wait for 100ns;
+          
+end process; 
+
+end Behavioral;
+```
+
+- Register Bank
+
+![Register Bank testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Reg_Bank.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Reg_Bank_4_TB is
+--  Port ( );
+end Reg_Bank_4_TB;
+
+architecture Behavioral of Reg_Bank_4_TB is
+component Reg_bank_4
+    port(
+        R_B_En : in STD_LOGIC;
+        Clk : in STD_LOGIC;
+        R_En : in STD_LOGIC_VECTOR (2 downto 0);
+        Reset : in STD_LOGIC;
+        R_Input : in STD_LOGIC_VECTOR (3 downto 0);
+        R_0 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_1 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_2 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_3 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_4 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_5 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_6 : out STD_LOGIC_VECTOR (3 downto 0);
+        R_7 : out STD_LOGIC_VECTOR (3 downto 0)
+        );    
+end component;
+
+signal R_Input : STD_LOGIC_VECTOR(3 downto 0);
+signal clk, Reset, R_B_En : STD_LOGIC := '0';
+signal R_En : STD_LOGIC_VECTOR(2 downto 0);
+signal R_0, R_1, R_2, R_3, R_4, R_5, R_6, R_7 : STD_LOGIC_VECTOR(3 downto 0);
+
+begin
+UUT: Reg_Bank_4
+port map(
+    R_B_En => R_B_En,
+    Clk => Clk,
+    R_En => R_En,
+    Reset => Reset,
+    R_Input => R_Input,
+    R_0 => R_0,
+    R_1 => R_1,
+    R_2 => R_2,
+    R_3 => R_3,
+    R_4 => R_4,
+    R_5 => R_5,
+    R_6 => R_6,
+    R_7 => R_7
+    );
+
+    process 
+    begin
+        wait for 5ns;
+        Clk <= NOT(Clk);
+    end process;
+    
+    process
+    begin
+    reset <= '1';
+    wait for 5ns;
+    reset <= '0';
+    
+    -- Index Number : 220708 = 0001 1011 0000 0010 0100
+    R_B_En <= '1';
+    R_En <= "000";
+    wait for 5ns;
+    R_Input <= "0001";    --1 R_0 is hardcoded to 0000
+    wait for 100ns;
+    
+    R_En <= "001";
+    wait for 5ns;
+    R_Input <= "1011";    --b
+    wait for 100ns;
+    
+    R_B_En <= '0';
+    R_En <= "010";
+    wait for 5ns;
+    R_Input <= "0000";    --0
+    wait for 100ns;
+    
+    R_En <= "011";
+    wait for 5ns;
+    R_Input <= "0010";    --2
+    wait for 100ns;
+    
+    R_En <= "100";
+    wait for 5ns;
+    R_Input <= "0100";    --4
+    wait for 100ns;
+    
+    R_B_En <= '1';
+    R_En <= "101";
+    wait for 5ns;
+    R_Input <= "1000";    --8
+    wait for 100ns;
+    
+    R_En <= "110";
+    wait for 5ns;
+    R_Input <= "0100";    --4
+    wait for 100ns;
+    
+    R_En <= "111";
+    wait for 5ns;
+    R_Input <= "1100";    --C
+    wait for 100ns;
+    reset <= '1';
+    wait;
+        
+    end process;
+
+end Behavioral;
+```
+
+- Add Sub Unit
+
+![Add Sub Unit testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Add_Sub_4.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Add_sub_4_0_TB is
+--  Port ( );
+end Add_sub_4_0_TB;
+
+architecture Behavioral of Add_sub_4_0_TB is
+
+component Add_Sub_4 is
+  Port ( A : in STD_LOGIC_VECTOR (3 downto 0);
+         B : in STD_LOGIC_VECTOR (3 downto 0);
+         Neg : in STD_LOGIC;
+         Sum : out STD_LOGIC_VECTOR (3 downto 0);
+         Overflow : out STD_LOGIC;
+         Zero : out STD_LOGIC);
+end component;
+
+signal a,b,sum : STD_LOGIC_VECTOR(3 downto 0);
+Signal neg,overflow,zero : STD_LOGIC;
+
+begin
+
+UUT: Add_Sub_4
+port map(
+    A => a,
+    B => b,
+    Neg => neg,
+    Sum => sum,
+    Zero => zero,
+    Overflow => overflow 
+    );
+    
+process
+begin
+
+-- index numbers : 220131 (110101101111100011), 220185 (110101110000011001) 
+-- 220708 (110101111000100100), 220734 (110101111000111110)
+
+A <= "1101";
+B <= "0110";
+Neg <= '0';
+
+wait for 100ns;
+
+A <= "1111";
+B <= "1000";
+Neg <= '1';
+wait for 100ns;
+
+A <= "1101";
+B <= "0111";
+Neg <= '0';
+
+wait for 100ns;
+
+A <= "0000";
+B <= "0110";
+Neg <= '1';
+wait for 100ns;
+
+A <= "1101";
+B <= "0111";
+Neg <= '0';
+
+wait for 100ns;
+
+A <= "1000";
+B <= "1001";
+Neg <= '1';
+wait for 100ns;
+
+A <= "1101";
+B <= "0111";
+Neg <= '0';
+
+wait for 100ns;
+
+A <= "0000";
+B <= "1111";
+Neg <= '1';
+
+
+wait;
+end process;
+
+end Behavioral;
+
+```
+
+- Comparator
+
+![Comparator testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Comparator.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Compatator_TB is
+--  Port ( );
+end Compatator_TB;
+
+architecture Behavioral of Compatator_TB is
+
+component Comparator_4 is
+    Port ( A : in STD_LOGIC_VECTOR (3 downto 0);
+           B : in STD_LOGIC_VECTOR (3 downto 0);
+           A_Equals_B : out STD_LOGIC;
+           A_Greater_Than_B : out STD_LOGIC;
+           A_Less_Than_B : out STD_LOGIC);
+end component;
+
+signal a,b : std_logic_vector (3 downto 0);
+signal aeqb, agb, alb : std_logic;
+
+begin
+UUT : Comparator_4
+    port map(
+        A => a,
+        B => b,
+        A_Equals_B => aeqb,
+        A_Greater_Than_B => agb,
+        A_Less_Than_B => alb
+    );
+process
+
+begin
+A <= "0000";
+B <= "0001";
+WAIT FOR 100 ns;
+
+A <= "0001";
+B <= "0001";
+WAIT FOR 100 ns;
+
+A <= "1000";
+B <= "0001";
+WAIT;
+end process;
+
+end Behavioral;
+
+```
+
+- Incrementor
+
+![Incrementor testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Incrementor_3.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Incrementer_3_TB is
+--  Port ( );
+end Incrementer_3_TB;
+
+architecture Behavioral of Incrementer_3_TB is
+
+component Incrementer_3 is
+  Port (D : in STD_LOGIC_VECTOR (2 downto 0);
+        Q : out STD_LOGIC_VECTOR (2 downto 0));
+        
+end component;
+
+signal d,q : std_logic_vector (2 downto 0);
+
+begin
+UUT : Incrementer_3
+    port map (
+        D => d,
+        Q => q);
+        
+process
+begin
+
+D <= "000";
+wait for 100ns;
+
+D <= "001";
+wait;
+
+end process;
+ 
+end Behavioral;
+
+```
+
+- Multiplexer_2_4
+
+![Multiplexer_2_4 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_2_4.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux_2_4_TB is
+--  Port ( );
+end Mux_2_4_TB;
+
+architecture Behavioral of Mux_2_4_TB is
+component Mux_2_4
+port(I_0 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_1 : in STD_LOGIC_VECTOR (3 downto 0);
+     Selector : in STD_LOGIC;
+     Q : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal I_0, I_1, Q : STD_LOGIC_VECTOR(3 downto 0);
+signal Selector : STD_LOGIC;
+
+begin
+UUT: Mux_2_4
+Port Map(
+    I_0 => I_0,
+    I_1 => I_1,
+    Selector => Selector,
+    Q => Q
+    );
+    
+    process 
+     begin
+         I_0 <= "0001";
+         I_1 <= "0100";
+         Selector <= '1';
+         wait for 500ns;
+         
+         Selector <= '0'; 
+         wait;
+    end process;    
+
+
+end Behavioral;
+
+```
+
+- Multiplexer_2_3
+
+![Multiplexer_2_3 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_2_3.png)
+
+```sh
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux_2_3_TB is
+--  Port ( );
+end Mux_2_3_TB;
+
+architecture Behavioral of Mux_2_3_TB is
+
+component Mux_2_3
+port(I_0 : in STD_LOGIC_VECTOR (2 downto 0);
+     I_1 : in STD_LOGIC_VECTOR (2 downto 0);
+     Selector : in STD_LOGIC;
+     Q : out STD_LOGIC_VECTOR (2 downto 0));
+end component;
+
+signal I_0, I_1, Q : STD_LOGIC_VECTOR(2 downto 0);
+signal Selector : STD_LOGIC;
+
+begin
+UUT: Mux_2_3
+Port Map(
+    I_0 => I_0,
+    I_1 => I_1,
+    Selector => Selector,
+    Q => Q
+    );
+    
+    process 
+     begin
+         I_0 <= "001";
+         I_1 <= "010";
+         Selector <= '1';
+         wait for 500ns;
+         
+         Selector <= '0'; 
+         wait;
+    end process;    
+
+end Behavioral;
+
+```
+
+- Multiplexer_8_4
+
+![Multiplexer_8_4 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_8_4.png)
+
+```sh
+ibrary IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux_8_4_TB is
+--  Port ( );
+end Mux_8_4_TB;
+
+architecture Behavioral of Mux_8_4_TB is
+
+component Mux_8_4
+port(I_0 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_1 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_2 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_3 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_4 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_5 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_6 : in STD_LOGIC_VECTOR (3 downto 0);
+     I_7 : in STD_LOGIC_VECTOR (3 downto 0);
+     Selector : in STD_LOGIC_VECTOR (2 downto 0);
+     Q : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal I_0, I_1, I_2, I_3, I_4, I_5, I_6, I_7, Q : STD_LOGIC_VECTOR(3 downto 0);
+Signal Selector : STD_LOGIC_VECTOR(2 downto 0);
+
+begin
+UUT: Mux_8_4
+port map(
+    I_0 => I_0,
+    I_1 => I_1,
+    I_2 => I_2,
+    I_3 => I_3,
+    I_4 => I_4,
+    I_5 => I_5,
+    I_6 => I_6,
+    I_7 => I_7,
+    Selector => Selector,
+    Q => Q 
+    );
+
+process
+begin
+    I_0 <= "0000";
+    I_1 <= "0001";
+    I_2 <= "0010";
+    I_3 <= "0011";
+    I_4 <= "0100";
+    I_5 <= "0101";
+    I_6 <= "0110";
+    I_7 <= "0111";
+    
+    Selector <= "000";
+    wait for 5ns;
+
+    Selector <= "001";
+    wait for 5ns;
+    
+     Selector <= "010";
+    wait for 5ns;   
+    
+    Selector <= "011";
+    wait for 5ns;
+    
+    Selector <= "100";
+    wait;
+        
+end process;
 end Behavioral;
 ```
