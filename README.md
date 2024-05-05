@@ -30,6 +30,7 @@ Our goal is to expand the processor to 8bit platform with 8 functions ALU, 32 bi
 
 Following is the highlevel design architecture of the 4bit nanoprocessor implementation.
 
+![Schematic](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Schematic_NanoProcessor_4.jpg)
 
 ## Assembly programs(with machine code) running in the ROM
 
