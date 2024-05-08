@@ -31,16 +31,16 @@ The lab task was to build a 4bit processor using Xilinx Vivado(VHDL), simulate t
 
 Following is the highlevel design architecture of the 4bit nanoprocessor implementation.
 
-![Schematic](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/Schematic_NanoProcessor_4.jpg?token=GHSAT0AAAAAACPMMGARZRKIZES3PQYM5ORAZRXXSWQ)
+![Schematic](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Schematic_NanoProcessor_4.jpg)
 
 ## Optimization
 - The basic version of nanoprocessor consumes 32 LUTs, 455 FFs, and 0.075W power.
 
-![Power Consumption of Basic NanoProcessor](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/Power_Consumption_NanoProcessor_basic.png?token=GHSAT0AAAAAACPMMGAQGWGPZFWYHPQFQR4QZRXXTRQ)
+![Power Consumption of Basic NanoProcessor](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_basic.png)
 
 - The advanced version of nanoprocessor consumes 39 LUTs, 45 FFs, and 0.081W power.
 
-![Power Consumption of NanoProcessor with more outputs and comparator function](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/Power_Consumption_NanoProcessor_Advanced.png?token=GHSAT0AAAAAACPMMGAR34TIJPRJAPWE27SYZRXXU6A)
+![Power Consumption of NanoProcessor with more outputs and comparator function](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Power_Consumption_NanoProcessor_Advanced.png)
 
 - Only key difference between basic and advanced designs is the comparator. It involves if conditions and outputs to 3 LEDs. This drastically increased 32 LUT count to 39. 
  - We noted that including 7 Segment Display inside NanoProcessor.vhd increases no.of outputs related and involves more busses resulting increased LUT count. Therefore, we connected Clock, 7 Segment Display and NanoProcessor in a higher level of hierachy.
@@ -63,7 +63,7 @@ PS : During the project, we met with many more obstracles. But, most of them wer
 ## Future Improvements
 Following is the highlevel design schematic of the proposed 8bit nano processor.
 
-![Advanced NanoProcessor](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/Advanced_NanoProcessor_8bit.png?token=GHSAT0AAAAAACPMMGARVX4LBV7B3C2RQJLMZRXXQEA) 
+![Advanced NanoProcessor](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/Advanced_NanoProcessor_8bit.png) 
 
 - ALU includes add/ sub, div/ mod, multiplication, increment/ decrement and comparator functions
 - Includes 17 bit instructions. Program rom can store 16 instructions
@@ -1180,7 +1180,7 @@ end Behavioral;
 
 - NanoProcessor
 
-![NanoProcessor testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_NanoProcessor.png?token=GHSAT0AAAAAACPMMGARJEBR42OQMLRJ6XSEZRXXWTA)
+![NanoProcessor testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_NanoProcessor.png)
 
 ```sh
 library IEEE;
@@ -1248,7 +1248,7 @@ end Behavioral;
 
 - Program Counter
 
-![Program Counter testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_PC_3.png?token=GHSAT0AAAAAACPMMGARQRN4HVJQYF6CXJUEZRXXXNQ)
+![Program Counter testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_PC_3.png)
 
 ```sh
 library IEEE;
@@ -1313,7 +1313,7 @@ end Behavioral;
 
 - Program Rom
 
-![Program Rom testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Program_Rom.png?token=GHSAT0AAAAAACPMMGARU3AIL2G53ZF4J4POZRXXX7Q)
+![Program Rom testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Program_Rom.png)
 
 ```sh
 library IEEE;
@@ -1376,7 +1376,7 @@ end Behavioral;
 
 - Instruction Decoder
 
-![Instruction Decoder testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Instruction_Decoder.png?token=GHSAT0AAAAAACPMMGARSFYOC2LJ5SFIFNLKZRXXYNA)
+![Instruction Decoder testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Instruction_Decoder.png)
 
 ```sh
 library IEEE;
@@ -1448,7 +1448,7 @@ end Behavioral;
 
 - Register Bank
 
-![Register Bank testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Reg_Bank.png?token=GHSAT0AAAAAACPMMGAQ7OHMQ5FCHCXWHUF4ZRXXZDQ)
+![Register Bank testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Reg_Bank.png)
 
 ```sh
 library IEEE;
@@ -1565,7 +1565,7 @@ end Behavioral;
 
 - Add Sub Unit
 
-![Add Sub Unit testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Add_Sub_4.png?token=GHSAT0AAAAAACPMMGAQZX5X4CGITBJ7ZH2CZRXXZWA)
+![Add Sub Unit testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Add_Sub_4.png)
 
 ```sh
 library IEEE;
@@ -1660,7 +1660,7 @@ end Behavioral;
 
 - Comparator
 
-![Comparator testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Comparator.png?token=GHSAT0AAAAAACPMMGAQEQV5CZMQXJVA4YGMZRXX2DQ)
+![Comparator testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Comparator.png)
 
 ```sh
 library IEEE;
@@ -1714,7 +1714,7 @@ end Behavioral;
 
 - Incrementor
 
-![Incrementor testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Incrementor_3.png?token=GHSAT0AAAAAACPMMGAQ7EDOFJK2ZF2P6PTQZRXX2QQ)
+![Incrementor testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Incrementor_3.png)
 
 ```sh
 library IEEE;
@@ -1757,7 +1757,7 @@ end Behavioral;
 
 - Multiplexer_2_4
 
-![Multiplexer_2_4 testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Mux_2_4.png?token=GHSAT0AAAAAACPMMGARINSMFNLVE5226UWIZRXX3FA)
+![Multiplexer_2_4 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_2_4.png)
 
 ```sh
 library IEEE;
@@ -1805,7 +1805,7 @@ end Behavioral;
 
 - Multiplexer_2_3
 
-![Multiplexer_2_3 testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Mux_2_3.png?token=GHSAT0AAAAAACPMMGAQK3NWAJUILTDLK5ZYZRXX3TA)
+![Multiplexer_2_3 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_2_3.png)
 
 ```sh
 library IEEE;
@@ -1851,7 +1851,7 @@ end Behavioral;
 ```
 - Multiplexer_8_4
 
-![Multiplexer_8_4 testbench](https://raw.githubusercontent.com/dewminawijekoon/4_bit_NanoProcessor/main/Data/TB_Mux_8_4.png?token=GHSAT0AAAAAACPMMGARRQPGSWSWXIQLXK4WZRXX4AQ)
+![Multiplexer_8_4 testbench](https://github.com/dewminawijekoon/4_bit_NanoProcessor/blob/main/Data/TB_Mux_8_4.png)
 
 ```sh
 ibrary IEEE;
