@@ -1,11 +1,5 @@
 # 4_bit_NanoProcessor - Lab 9 & 10 (Group 31)
 
-## Group Members
-- Yapa YMRNT – 220734B
-- Gunarathna DMNS – 220185P
-- Wijekoon SWGMYGDM – 220708B
-- Disanayaka DMDM – 220131A
-
 ## Overview
 
 The lab task was to build a 4bit processor using Xilinx Vivado(VHDL), simulate the process and test the build on a Basys3 board. Our workflow for the project is given below.
